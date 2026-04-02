@@ -195,8 +195,6 @@ app.get("/", (_, res) => {
   res.send("Guess It Bro socket server running");
 });
 
-const SERVER_PORT = process.env.PORT || 4000;
-
-server.listen(SERVER_PORT, () => {
-  console.log(`Server running on ${SERVER_PORT}`);
+server.listen(4000, () => {
+  console.log("Server running on http://localhost:4000");
 });
