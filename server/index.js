@@ -12,6 +12,9 @@ const { CLIENT_URL, PORT } = process.env;
 
 const allowedOrigins = [CLIENT_URL, "http://localhost:5173"].filter(Boolean);
 
+console.log("CLIENT_URL = ", CLIENT_URL);
+console.log("PORT = ", PORT);
+
 app.use(
   cors({
     origin: allowedOrigins,
