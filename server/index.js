@@ -4,10 +4,11 @@ const cors = require("cors");
 const { Server } = require("socket.io");
 const crypto = require("crypto");
 
-const clientAppUrl = "https://guess-it-bro.vercel.app";
-
 const app = express();
-const allowedOrigins = [clientAppUrl, "http://localhost:5173"].filter(Boolean);
+
+const CLIENT_URL = "https://guess-it-bro.vercel.app";
+
+const allowedOrigins = [CLIENT_URL, "http://localhost:5173"];
 
 app.use(
   cors({
@@ -20,8 +21,9 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: true,
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
@@ -63,7 +65,7 @@ io.on("connection", (socket) => {
       roomId,
       userId: finalUserId,
       room,
-      shareUrl: `${clientAppUrl}/room/${roomId}`,
+      shareUrl: `${CLIENT_URL}/room/${roomId}`,
     });
 
     io.to(roomId).emit("room:updated", room);
@@ -118,7 +120,7 @@ io.on("connection", (socket) => {
       roomId,
       userId: finalUserId,
       room,
-      shareUrl: `${clientAppUrl}/room/${roomId}`,
+      shareUrl: `${CLIENT_URL}/room/${roomId}`,
     });
 
     io.to(roomId).emit("room:updated", room);
@@ -192,9 +194,11 @@ io.on("connection", (socket) => {
 });
 
 app.get("/", (_, res) => {
-  res.send("Guess It Bro socket server running");
+  res.send("Server running 🚀");
 });
 
-server.listen(4000, () => {
-  console.log("Server running on http://localhost:4000");
+const PORT = process.env.PORT || 4000;
+
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });
