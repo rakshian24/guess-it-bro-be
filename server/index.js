@@ -1,15 +1,13 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
 const crypto = require("crypto");
-const dotenv = require("dotenv");
-
 const { NODE_ENV, CLIENT_URL, PORT } = process.env;
-
-if (NODE_ENV !== "production") {
-  require("dotenv").config();
-}
 
 const app = express();
 
@@ -18,6 +16,7 @@ const allowedOrigins = [CLIENT_URL, "http://localhost:5173"].filter(Boolean);
 console.log("CLIENT_URL = ", CLIENT_URL);
 console.log("NODE_ENV = ", NODE_ENV);
 console.log("PORT = ", PORT);
+console.log("allowedOrigins = ", allowedOrigins);
 
 app.use(
   cors({
