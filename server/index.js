@@ -3,7 +3,8 @@ const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
 const crypto = require("crypto");
-import dotenv from "dotenv";
+const dotenv = require("dotenv");
+
 dotenv.config({ path: "./.env" });
 
 const app = express();
