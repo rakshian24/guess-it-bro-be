@@ -1,37 +1,18 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
-
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
 const crypto = require("crypto");
-const { NODE_ENV, CLIENT_URL, PORT } = process.env;
 
 const app = express();
-
-const allowedOrigins = [CLIENT_URL, "http://localhost:5173"].filter(Boolean);
-
-console.log("CLIENT_URL = ", CLIENT_URL);
-console.log("NODE_ENV = ", NODE_ENV);
-console.log("PORT = ", PORT);
-console.log("allowedOrigins = ", allowedOrigins);
-
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  }),
-);
+app.use(cors());
 
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: true,
     methods: ["GET", "POST"],
-    credentials: true,
   },
 });
 
@@ -73,7 +54,7 @@ io.on("connection", (socket) => {
       roomId,
       userId: finalUserId,
       room,
-      shareUrl: `${CLIENT_URL}/room/${roomId}`,
+      shareUrl: `http://localhost:5173/room/${roomId}`,
     });
 
     io.to(roomId).emit("room:updated", room);
@@ -128,7 +109,7 @@ io.on("connection", (socket) => {
       roomId,
       userId: finalUserId,
       room,
-      shareUrl: `${CLIENT_URL}/room/${roomId}`,
+      shareUrl: `http://localhost:5173/room/${roomId}`,
     });
 
     io.to(roomId).emit("room:updated", room);
@@ -187,6 +168,7 @@ io.on("connection", (socket) => {
 
           if (latestRoom.players.length === 0) {
             rooms.delete(joinedRoomId);
+            console.log(`Room ${joinedRoomId} deleted`);
           } else {
             io.to(joinedRoomId).emit("room:updated", latestRoom);
           }
@@ -194,14 +176,16 @@ io.on("connection", (socket) => {
       }, 5000);
     }
   });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
 });
 
 app.get("/", (_, res) => {
-  res.status(200).send("Guess It Bro socket server running");
+  res.send("Guess It Bro socket server running");
 });
 
-const SERVER_PORT = Number(PORT) || 4000;
-
-server.listen(SERVER_PORT, "0.0.0.0", () => {
-  console.log(`Server running on port ${SERVER_PORT}`);
+server.listen(4000, () => {
+  console.log("Server running on http://localhost:4000");
 });
