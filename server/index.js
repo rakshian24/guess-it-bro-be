@@ -5,14 +5,18 @@ const { Server } = require("socket.io");
 const crypto = require("crypto");
 const dotenv = require("dotenv");
 
-dotenv.config({ path: "./.env" });
+const { NODE_ENV, CLIENT_URL, PORT } = process.env;
+
+if (NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 
 const app = express();
-const { CLIENT_URL, PORT } = process.env;
 
 const allowedOrigins = [CLIENT_URL, "http://localhost:5173"].filter(Boolean);
 
 console.log("CLIENT_URL = ", CLIENT_URL);
+console.log("NODE_ENV = ", NODE_ENV);
 console.log("PORT = ", PORT);
 
 app.use(
