@@ -4,10 +4,10 @@ const cors = require("cors");
 const { Server } = require("socket.io");
 const crypto = require("crypto");
 
+const clientAppUrl = "https://guess-it-bro.vercel.app";
+
 const app = express();
-const allowedOrigins = [process.env.CLIENT_URL, "http://localhost:5173"].filter(
-  Boolean,
-);
+const allowedOrigins = [clientAppUrl, "http://localhost:5173"].filter(Boolean);
 
 app.use(
   cors({
@@ -63,7 +63,7 @@ io.on("connection", (socket) => {
       roomId,
       userId: finalUserId,
       room,
-      shareUrl: `${process.env.CLIENT_URL}/room/${roomId}`,
+      shareUrl: `${clientAppUrl}/room/${roomId}`,
     });
 
     io.to(roomId).emit("room:updated", room);
@@ -118,7 +118,7 @@ io.on("connection", (socket) => {
       roomId,
       userId: finalUserId,
       room,
-      shareUrl: `${process.env.CLIENT_URL}/room/${roomId}`,
+      shareUrl: `${clientAppUrl}/room/${roomId}`,
     });
 
     io.to(roomId).emit("room:updated", room);
