@@ -197,11 +197,11 @@ io.on("connection", (socket) => {
 });
 
 app.get("/", (_, res) => {
-  res.send("Guess It Bro socket server running");
+  res.status(200).send("Guess It Bro socket server running");
 });
 
-const SERVER_PORT = PORT || 4000;
+const SERVER_PORT = Number(PORT) || 4000;
 
-server.listen(SERVER_PORT, () => {
+server.listen(SERVER_PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${SERVER_PORT}`);
 });
