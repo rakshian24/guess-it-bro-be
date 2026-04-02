@@ -5,7 +5,16 @@ const { Server } = require("socket.io");
 const crypto = require("crypto");
 
 const app = express();
-app.use(cors());
+const allowedOrigins = [process.env.CLIENT_URL, "http://localhost:5173"].filter(
+  Boolean,
+);
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  }),
+);
 
 const server = http.createServer(app);
 
@@ -54,7 +63,7 @@ io.on("connection", (socket) => {
       roomId,
       userId: finalUserId,
       room,
-      shareUrl: `http://localhost:5173/room/${roomId}`,
+      shareUrl: `${process.env.CLIENT_URL}/room/${roomId}`,
     });
 
     io.to(roomId).emit("room:updated", room);
@@ -109,7 +118,7 @@ io.on("connection", (socket) => {
       roomId,
       userId: finalUserId,
       room,
-      shareUrl: `http://localhost:5173/room/${roomId}`,
+      shareUrl: `${process.env.CLIENT_URL}/room/${roomId}`,
     });
 
     io.to(roomId).emit("room:updated", room);
@@ -186,6 +195,8 @@ app.get("/", (_, res) => {
   res.send("Guess It Bro socket server running");
 });
 
-server.listen(4000, () => {
-  console.log("Server running on http://localhost:4000");
+const SERVER_PORT = process.env.PORT || 4000;
+
+server.listen(SERVER_PORT, () => {
+  console.log(`Server running on ${SERVER_PORT}`);
 });
